@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 class GenreRelatedField(serializers.SlugRelatedField):
     def to_internal_value(self, data):
+        data = data.lower()
         try:
             return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
         except ObjectDoesNotExist:
@@ -32,6 +33,12 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = ['name', 'description', 'created_at', 'updated_at']
 
+    def create(self, validated_data):
+        name = validated_data.pop('name').lower()
+        instance = Genre(**validated_data, name=name)
+        instance.save()
+        return instance
+
 class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
@@ -41,4 +48,12 @@ class PublisherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
         fields = ['trade_name', 'founded', 'created_at', 'updated_at']
+
+    def to_representation(self, instance):
+        data = super(PublisherSerializer, self).to_representation(instance)
+        data.update(...)
+        return data
+
+
+
 
