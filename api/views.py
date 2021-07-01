@@ -7,6 +7,7 @@ from django_filters.fields import Lookup
 import json
 
 
+
 # filtros
 class ListFilter(django_filters.Filter):
     def filter(self, qs, value):

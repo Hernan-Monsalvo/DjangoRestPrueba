@@ -1,9 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_text
-
+from django.utils import timezone
 from .models import VideoGame, Genre, Platform, Publisher
 from rest_framework import serializers
 
+#campos customizados
 class GenreRelatedField(serializers.SlugRelatedField):
     def to_internal_value(self, data):
         data = data.lower()
@@ -14,8 +15,18 @@ class GenreRelatedField(serializers.SlugRelatedField):
         except (TypeError, ValueError):
             self.fail('invalid')
 
+class CustomDateTimeField(serializers.DateTimeField):
+    def to_representation(self, value):
+        tz = timezone.get_default_timezone()
 
+        value = timezone.localtime(value, timezone=tz)
+
+        return super().to_representation(str(value)+" UTC")
+
+#serializadores
 class VideoGameSerializer(serializers.ModelSerializer):
+    created_at = CustomDateTimeField()
+    updated_at = CustomDateTimeField()
     genres = GenreRelatedField(
         many=True,
         slug_field='name',
@@ -29,6 +40,8 @@ class VideoGameSerializer(serializers.ModelSerializer):
         fields = ['name', 'published_year', 'genres', 'publisher', 'platform', 'created_at', 'updated_at']
 
 class GenreSerializer(serializers.ModelSerializer):
+    created_at = CustomDateTimeField()
+    updated_at = CustomDateTimeField()
     class Meta:
         model = Genre
         fields = ['name', 'description', 'created_at', 'updated_at']
@@ -40,19 +53,23 @@ class GenreSerializer(serializers.ModelSerializer):
         return instance
 
 class PlatformSerializer(serializers.ModelSerializer):
+    created_at = CustomDateTimeField()
+    updated_at = CustomDateTimeField()
     class Meta:
         model = Platform
         fields = ['name', 'manufacturer', 'created_at', 'updated_at']
 
+
+
 class PublisherSerializer(serializers.ModelSerializer):
+
+    created_at = CustomDateTimeField()
+    updated_at = CustomDateTimeField()
     class Meta:
         model = Publisher
         fields = ['trade_name', 'founded', 'created_at', 'updated_at']
 
-    def to_representation(self, instance):
-        data = super(PublisherSerializer, self).to_representation(instance)
-        data.update(...)
-        return data
+
 
 
 
