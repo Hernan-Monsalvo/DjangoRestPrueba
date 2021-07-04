@@ -25,8 +25,7 @@ class CustomDateTimeField(serializers.DateTimeField):
 
 #serializadores
 class VideoGameSerializer(serializers.ModelSerializer):
-    created_at = CustomDateTimeField()
-    updated_at = CustomDateTimeField()
+
     genres = GenreRelatedField(
         many=True,
         slug_field='name',
@@ -40,8 +39,7 @@ class VideoGameSerializer(serializers.ModelSerializer):
         fields = ['name', 'published_year', 'genres', 'publisher', 'platform', 'created_at', 'updated_at']
 
 class GenreSerializer(serializers.ModelSerializer):
-    created_at = CustomDateTimeField()
-    updated_at = CustomDateTimeField()
+
     class Meta:
         model = Genre
         fields = ['name', 'description', 'created_at', 'updated_at']
@@ -53,8 +51,7 @@ class GenreSerializer(serializers.ModelSerializer):
         return instance
 
 class PlatformSerializer(serializers.ModelSerializer):
-    created_at = CustomDateTimeField()
-    updated_at = CustomDateTimeField()
+
     class Meta:
         model = Platform
         fields = ['name', 'manufacturer', 'created_at', 'updated_at']
@@ -63,11 +60,23 @@ class PlatformSerializer(serializers.ModelSerializer):
 
 class PublisherSerializer(serializers.ModelSerializer):
 
-    created_at = CustomDateTimeField()
-    updated_at = CustomDateTimeField()
+
     class Meta:
         model = Publisher
         fields = ['trade_name', 'founded', 'created_at', 'updated_at']
+
+        def to_representation(self, instance):
+            data = super(PublisherSerializer, self).to_representation(instance)
+            print(data)
+            return None
+
+
+        #def to_representation(self, value):
+        #    tz = timezone.get_default_timezone()
+
+        #    value = timezone.localtime(value, timezone=tz)
+
+        #    return super().to_representation(str(value) + " UTC")
 
 
 
