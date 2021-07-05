@@ -1,4 +1,11 @@
 {"name":"hernan",
 "email":"monsalvo@hernan.com",
+"password":"1234",
+"password2":"1234"
+}
+
+
+{"name":"Normi",
+"email":"",
 "password":"1234"
 }

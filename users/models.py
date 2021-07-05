@@ -6,3 +6,5 @@ class User(models.Model):
         db_table = "Users"
 
     name = models.CharField(max_length=64)
+    email = models.EmailField()
+    password = models.CharField(max_length=64)

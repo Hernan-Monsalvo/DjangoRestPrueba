@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from api import views
-from users.views import user_api_view
+from users.views import user_api_view, user_register_view, user_login_view
 
 router = routers.DefaultRouter()
 router.register(r'games', views.VideoGameViewSet)
@@ -29,5 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('users/', user_api_view, name='user_api')
+    path('users/', user_api_view, name='user_api'),
+    path('users/register', user_register_view, name='register'),
+    path('users/login', user_login_view, name='login')
 ]
